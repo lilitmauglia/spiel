@@ -2,11 +2,11 @@
     <head>
     </head>
     <body>
-        <h1>Device Orientation Event Test</h1>
+        <h1>DeviceOrientationEvent Test</h1>
         <button onclick='add();'>Start</button>
         <script>
             function move(event) {
-                document.body.innerText = JSON.stringify(event);
+                document.body.innerText = JSON.stringify(event, [ 'alpha', 'beta', 'gamma' ]);
             }
 
             async function add() {
