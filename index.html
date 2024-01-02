@@ -118,16 +118,16 @@
                     left += 30;
                 }
 
-                console.log({ top, left })
-
                 spieler.style.left = left;
                 spieler.style.top = top;
+
+                console.log({ left, top });
 
                 rect = kaese.getBoundingClientRect();
                 var kaeseTop = rect.y;
                 var kaeseLeft = rect.x;
                 if ((Math.abs(top - kaeseTop) + Math.abs(left - kaeseLeft)) < 50) {
-                    console.log('Mer han d Käs gfunne!');
+                    console.log('Mer han de Käs gfunne!');
                     kaese.style.visibility = 'hidden';
                     document.body.style.backgroundColor = 'lightgreen';
                     punkte = punkte + 10;
@@ -148,24 +148,7 @@
             document.addEventListener('keydown', move);
 
             // For mobile
-            var added = false;
-            document.addEventListener('click', async function() {
-                console.log('Adding...')
-                if (added) {
-                    console.log('Added')
-                    return;
-                }
-                console.log('Request');
-                if (!DeviceOrientationEvent || !DeviceOrientationEvent.requestPermission) {
-                    return;
-                }
-                const permissionState = await DeviceOrientationEvent.requestPermission();
-                console.log({ permissionState });
-                if (permissionState === "granted") {
-                    window.addEventListener('deviceorientation', move);
-                    added = true;
-                }
-            });
+            window.addEventListener('deviceorientation', move);
 
             // For both
             document.addEventListener('click', move);
@@ -189,8 +172,6 @@
 
                 spinne.style.top = top + ((spielerTop - top) / 2);
                 spinne.style.left = left + ((spielerLeft - left) / 2);
-
-                console.log({ left, spielerLeft, top, spielerTop });
 
                 if ((Math.abs(top - spielerTop) + Math.abs(left - spielerLeft)) < 100) {
                     document.body.style.backgroundColor = 'pink';
@@ -216,6 +197,32 @@
             folgen();
 
         </script>
+
+        <script>
+            // For mobile
+            var added = false;
+            function add() {
+                document.addEventListener('click', async function() {
+                    console.log('Adding...')
+                    if (added) {
+                        console.log('Added')
+                        return;
+                    }
+                    console.log('Request');
+                    if (!DeviceOrientationEvent || !DeviceOrientationEvent.requestPermission) {
+                        return;
+                    }
+                    const permissionState = await DeviceOrientationEvent.requestPermission();
+                    console.log({ permissionState });
+                    if (permissionState === "granted") {
+                        window.addEventListener('deviceorientation', move);
+                        added = true;
+                    }
+                });
+            }
+        </script>
+
+        <button onclick='add();'>Spiele</button>
 
         <script>
 
