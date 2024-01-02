@@ -56,7 +56,8 @@
             lebenZeiger = document.getElementById('leben');
             var leben = 100;
 
-            var pausiert = false;
+            var pausiert = true;
+            document.body.style.backgroundColor = 'gray';
 
             function move(e) {
 
@@ -65,19 +66,32 @@
                 }
 
                 // For mobile:
-                // if (e.type == 'deviceorientationevent')...
+                if (e.type == 'deviceorientation') {
+                    if (e.gamma < -10) {
+                        e.code = 'ArrowLeft';
+                    }
+                    if (e.gamma > 10) {
+                        e.code = 'ArrowRight';
+                    }
+                    if (e.beta - 20 < 10) {
+                        e.code = 'ArrowUp';
+                    }
+                    if (e.beta - 20 > 10) {
+                        e.code = 'ArrowDown';
+                    }
+                }
 
-                e = e || window.event;
+                const isMobile = navigator.userAgentData.mobile; //resolves true/false
 
                 if (pausiert) {
-                    if (e.code == 'Space') {
+                    if (e.code == 'Space' || e.type == 'click') {
                         document.body.style.backgroundColor = null;
                         pausiert = false;
                     }
                     return;
                 }
 
-                if (e.code == 'Space') {
+                if (e.code == 'Space' || e.type == 'click') {
                     pausiert = true;
                     document.body.style.backgroundColor = 'gray';
                     return;
@@ -130,10 +144,31 @@
 
             }
 
+            // For desktop
             document.addEventListener('keydown', move);
 
             // For mobile
-            window.addEventListener('deviceorientation', move);
+            var added = false;
+            window.addEventListener('click', async function() {
+                console.log('Adding...')
+                if (added) {
+                    console.log('Added')
+                    return;
+                }
+                console.log('Request');
+                if (!DeviceOrientationEvent || !DeviceOrientationEvent.requestPermission) {
+                    return;
+                }
+                const permissionState = await DeviceOrientationEvent.requestPermission();
+                console.log({ permissionState });
+                if (permissionState === "granted") {
+                    window.addEventListener('deviceorientation', move);
+                    added = true;
+                }
+            });
+
+            // For both
+            window.addEventListener('click', move);
 
             var timeout = 1000;
 
