@@ -3,57 +3,210 @@
 
     <style>
 
-        #spieler {
+        .figur {
             position: absolute;
-            font-size: x-large;
+            font-size: xxx-large;
+        }
+
+        #maus { 
             top: 50%;
             left: 50%;
+        }
+
+        #spinne { 
+            top: 10%;
+            left: 10%;
+        }
+
+        #kaese { 
+            top: 30%;
+            left: 70%;
+        }
+
+        #pilz { 
+            top: 70%;
+            left: 30%;
         }
 
     </style>
 
     <body>
 
-        <div id="spieler">🐁</div>
-        
+        <p>
+            Punkte: <span id="punkte">0</span>
+        </p>
+        <p>
+            Leben: <span id="leben">100</span>
+        </p>
+
+        <div id="maus" class="figur">🐁</div>
+        <div id="spinne" class="figur">🕷️</div>
+        <div id="kaese" class="figur">🧀</div>
+        <div id="pilz" class="figur">🍄</div>
+
         <script>
 
-            spieler = document.getElementById('spieler');
+            spieler = document.getElementById('maus');
+            spinne = document.getElementById('spinne');
+            kaese = document.getElementById('kaese');
+            
+            punkteZeiger = document.getElementById('punkte');
+            var punkte = 0;
+
+            lebenZeiger = document.getElementById('leben');
+            var leben = 100;
+
+            var pausiert = false;
 
             function move(e) {
 
+                if (leben < 1) {
+                    return;
+                }
+
+                // For mobile:
+                // if (e.type == 'deviceorientationevent')...
+
                 e = e || window.event;
 
-                console.log(e.code);
+                if (pausiert) {
+                    if (e.code == 'Space') {
+                        document.body.style.backgroundColor = null;
+                        pausiert = false;
+                    }
+                    return;
+                }
+
+                if (e.code == 'Space') {
+                    pausiert = true;
+                    document.body.style.backgroundColor = 'gray';
+                    return;
+                }
 
                 var rect = spieler.getBoundingClientRect();
-                console.log(rect);
                 var top = rect.y;
                 var left = rect.x;
 
                 // Oben
-                if (e.code == 'ArrowUp') {
-                    top -= 10;
+                if (e.code == 'ArrowUp' && top > 0 + 10) {
+                    top -= 30;
                 }
                 // Unten
-                else if (e.code == 'ArrowDown') {
-                    top += 10;
+                else if (e.code == 'ArrowDown' && top + spieler.offsetHeight < window. innerHeight - 10) {
+                    top += 30;
                 }
                 // Links
-                else if (e.code == 'ArrowLeft') {
-                    left -= 10;
+                else if (e.code == 'ArrowLeft' && left > 0 + 10) {
+                    left -= 30;
                 }
                 // Rechts
-                else if (e.code == 'ArrowRight') {
-                    left += 10;
+                else if (e.code == 'ArrowRight' && left + spieler.offsetWidth < window.innerWidth - 10) {
+                    left += 30;
                 }
+
+                console.log({ top, left })
 
                 spieler.style.left = left;
                 spieler.style.top = top;
 
+                rect = kaese.getBoundingClientRect();
+                var kaeseTop = rect.y;
+                var kaeseLeft = rect.x;
+                if ((Math.abs(top - kaeseTop) + Math.abs(left - kaeseLeft)) < 50) {
+                    console.log('Mer han d Käs gfunne!');
+                    kaese.style.visibility = 'hidden';
+                    document.body.style.backgroundColor = 'lightgreen';
+                    punkte = punkte + 10;
+                    punkteZeiger.textContent = punkte;
+                    beep2();
+                    setTimeout(function () {
+                        document.body.style.backgroundColor = null;
+                        kaese.style.visibility = 'visible';
+                        kaese.style.top = 100 + (Math.random() * (window.innerHeight - kaese.offsetHeight - 200));
+                        kaese.style.left = 100 + (Math.random() * (window.innerWidth - kaese.offsetWidth - 200));
+                    }, 1000);
+
+                }
+
             }
 
             document.addEventListener('keydown', move);
+
+            // For mobile
+            window.addEventListener('deviceorientation', move);
+
+            var timeout = 1000;
+
+            function folgen() {
+
+                if (pausiert) {
+                    setTimeout(folgen, 1000);
+                    return;
+                }
+
+                var rect = spieler.getBoundingClientRect();
+                var spielerTop = rect.y;
+                var spielerLeft = rect.x;
+
+                rect = spinne.getBoundingClientRect();
+                var top = rect.y;
+                var left = rect.x;
+
+                spinne.style.top = top + ((spielerTop - top) / 2);
+                spinne.style.left = left + ((spielerLeft - left) / 2);
+
+                console.log({ left, spielerLeft, top, spielerTop });
+
+                if ((Math.abs(top - spielerTop) + Math.abs(left - spielerLeft)) < 100) {
+                    document.body.style.backgroundColor = 'pink';
+                    leben = leben - 1;
+                    lebenZeiger.textContent = leben;
+                    if (leben < 50) {
+                        lebenZeiger.style.color = 'red';
+                    }
+                    beep1();
+                } else {
+                    document.body.style.backgroundColor = null;
+                }
+
+                if (leben < 1) {
+                    document.body.style.backgroundColor = 'red';
+                    return;
+                }
+
+                timeout = timeout * 0.99;
+                setTimeout(folgen, timeout);
+            }
+
+            folgen();
+
+        </script>
+
+        <script>
+
+            /* Sounds */
+
+            function beep1() {
+                sound('sine');
+            }
+
+            function beep2() {
+                sound('triangle');
+            }
+
+            function sound(soundType) {
+
+                var context = new AudioContext();
+                var oscillator = context.createOscillator();
+                oscillator.type = soundType;
+                oscillator.frequency.value = 800;
+                oscillator.connect(context.destination);
+                oscillator.start();
+                // Beep for 500 milliseconds
+                setTimeout(function () {
+                    oscillator.stop();
+                }, 100);
+            }
 
         </script>
 
