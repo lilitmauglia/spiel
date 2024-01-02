@@ -10,7 +10,13 @@
                 document.body.innerText = `type: ${ event.type }\nalpha: ${ Math.round(event.alpha) }\nbeta: ${ Math.round(event.beta) }\ngamma: ${ Math.round(event.gamma) }`;
             }
 
+            function click(event) {
+                document.body.innerText = 'click';
+            }
+
             window.addEventListener('deviceorientation', move);
+
+            window.addEventListener('click', click);
 
             async function add() {
                 if (!DeviceOrientationEvent || !DeviceOrientationEvent.requestPermission) {
