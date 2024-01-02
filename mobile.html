@@ -10,8 +10,8 @@
                 document.body.innerText = `type: ${ event.type }\nalpha: ${ Math.round(event.alpha) }\nbeta: ${ Math.round(event.beta) }\ngamma: ${ Math.round(event.gamma) }`;
             }
 
-            function click(event) {
-                document.body.innerText = 'click';
+            function touchstart(event) {
+                document.body.innerText = 'touchstart';
             }
 
             window.addEventListener('deviceorientation', move);
