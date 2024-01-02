@@ -84,14 +84,14 @@
                 const isMobile = navigator.userAgentData.mobile; //resolves true/false
 
                 if (pausiert) {
-                    if (e.code == 'Space' || e.type == 'click') {
+                    if (e.code == 'Space' || e.type == 'click' || e.type == 'touchstart') {
                         document.body.style.backgroundColor = null;
                         pausiert = false;
                     }
                     return;
                 }
 
-                if (e.code == 'Space' || e.type == 'click') {
+                if (e.code == 'Space' || e.type == 'click' || e.type == 'touchstart') {
                     pausiert = true;
                     document.body.style.backgroundColor = 'gray';
                     return;
@@ -202,7 +202,7 @@
             // For mobile
             var added = false;
             function add() {
-                document.addEventListener('click', async function() {
+                document.addEventListener('touchstart', async function() {
                     console.log('Adding...')
                     if (added) {
                         console.log('Added')
