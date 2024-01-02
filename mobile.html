@@ -7,7 +7,7 @@
         <script>
             function move(event) {
                 console.log(event);
-                document.body.innerText = `alpha: ${ Math.round(event.alpha) }\nbeta: ${ Math.round(event.beta) }\ngamma: ${ Math.round(event.gamma) }`;
+                document.body.innerText = `type: ${ event.type }\nalpha: ${ Math.round(event.alpha) }\nbeta: ${ Math.round(event.beta) }\ngamma: ${ Math.round(event.gamma) }`;
             }
 
             window.addEventListener('deviceorientation', move);
