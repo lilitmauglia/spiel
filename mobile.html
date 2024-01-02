@@ -2,24 +2,30 @@
     <head>
     </head>
     <body>
-        <h1>DeviceOrientationEvent Test</h1>
+        <h1>Device Orientation Event Test</h1>
         <button onclick='add();'>Start</button>
         <script>
             function move(event) {
-                document.body.innerText = ```
-                    alpha: ${ Math.round(event.alpha) }
-                    beta: ${ Math.round(event.beta) }
-                    gamma: ${ Math.round(event.gamma) }
-                    ```;
+                console.log(event);
+                document.body.innerText = `alpha: ${ Math.round(event.alpha) }\nbeta: ${ Math.round(event.beta) }\ngamma: ${ Math.round(event.gamma) }`;
             }
 
+            window.addEventListener('deviceorientation', move);
+
             async function add() {
+                if (!DeviceOrientationEvent || !DeviceOrientationEvent.requestPermission) {
+                    console.error('No DeviceOrientationEvent');
+                    return;
+                }
                 const permissionState = await DeviceOrientationEvent.requestPermission();
+
                 if (permissionState === "granted") {
                     // Permission granted
+                    console.error('Adding listener');
                     window.addEventListener('deviceorientation', move);
                 } else {
                     // Permission denied
+                    console.error({ permissionState });
                 }
             }
         </script>
