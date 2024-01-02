@@ -3,11 +3,21 @@
     </head>
     <body>
         <h1>Device Orientation Event Test</h1>
+        <button onclick='add();'>Start</button>
         <script>
             function move(event) {
                 document.body.innerText = JSON.stringify(event);
             }
-            window.addEventListener('deviceorientation', move);
+
+            async function add() {
+                const permissionState = await DeviceOrientationEvent.requestPermission();
+                if (permissionState === "granted") {
+                    // Permission granted
+                    window.addEventListener('deviceorientation', move);
+                } else {
+                    // Permission denied
+                }
+            }
         </script>
     </body>
 </html>
