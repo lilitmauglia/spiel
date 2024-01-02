@@ -16,7 +16,7 @@
 
             window.addEventListener('deviceorientation', move);
 
-            window.addEventListener('click', click);
+            window.addEventListener('touchstart', touchstart);
 
             async function add() {
                 if (!DeviceOrientationEvent || !DeviceOrientationEvent.requestPermission) {
