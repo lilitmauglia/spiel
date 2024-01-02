@@ -149,7 +149,7 @@
 
             // For mobile
             var added = false;
-            window.addEventListener('click', async function() {
+            document.addEventListener('click', async function() {
                 console.log('Adding...')
                 if (added) {
                     console.log('Added')
@@ -168,7 +168,7 @@
             });
 
             // For both
-            window.addEventListener('click', move);
+            document.addEventListener('click', move);
 
             var timeout = 1000;
 
