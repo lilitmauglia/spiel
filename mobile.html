@@ -1,0 +1,13 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>Device Orientation Event Test</h1>
+        <script>
+            function move(event) {
+                document.body.innerText = JSON.stringify(event);
+            }
+            window.addEventListener('deviceorientation', move);
+        </script>
+    </body>
+</html>
